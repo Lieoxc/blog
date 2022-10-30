@@ -6,7 +6,7 @@
 - golang [https://golang.google.cn](https://golang.google.cn)
 - vue [https://cn.vuejs.org](https://cn.vuejs.org)
 - xorm [https://xorm.io](https://xorm.io)
-- gin [https://gin-gonic.com/](hhttps://gin-gonic.com/)
+- gin [https://gin-gonic.com](hhttps://gin-gonic.com/)
 - iview [https://www.iviewui.com](https://www.iviewui.com)
 - UI 修改于 [https://firekylin.org](https://firekylin.org)
 
