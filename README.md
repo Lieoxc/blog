@@ -1,8 +1,6 @@
 ## 一个go语言实现的博客 
 ## A blog written in the go programming language 
 
-
-
 ### 技术栈
 ### Technology stack 
 - golang [https://golang.google.cn](https://golang.google.cn)
@@ -40,11 +38,6 @@
     - 配置数据库中 `user`表的`openid_qq`
     - 修改 `control/sysctl/auth_qq.go`中 `redirectUrl`重定向地址，要保证和申请应用中填写的一致(生成方式见`control/sysctl/sysctl_test.go`中 `TestURLEncode`)
 
-### 部署界面
-- 安装依赖```npm install```
-- 修改```.env.development```中的```VUE_APP_SRV```为自己的服务地址
-- 发布```npm run build```会自动发布到```dist```目录下面
-- 友链里面第一个为后台登陆地址默认用户名```admin```,密码```qwer1234```，可自行数据库修改
 ### 部署服务
 - 配置```conf.toml```数据库信息
 - 还原```data```目录下```db.sql```数据库
