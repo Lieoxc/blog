@@ -19,7 +19,7 @@ func ViewIndex(ctx *gin.Context) {
 		pi = 1
 	}
 	ps := model.Gcfg().PageSize
-	mods, _ := model.PostPage(-1, model.PostKindPost, pi, ps, "id", "title", "path", "created", "summary")
+	mods, _ := model.PostPage(-1, model.PostKindPost, pi, ps, "id", "title", "path", "updated", "summary")
 	total := model.PostCount(-1, model.PostKindPost)
 	naver := model.Naver{}
 	if pi > 1 {
