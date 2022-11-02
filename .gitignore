@@ -3,7 +3,6 @@
 static/dist/*
 dist/*
 logs/*
-docs/*
 gens/*
 blog
 blog.*
