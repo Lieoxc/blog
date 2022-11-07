@@ -1,8 +1,5 @@
 ## 一个go语言实现的博客 
-## A blog written in the go programming language 
-
-### 技术栈
-### Technology stack 
+### 技术栈（Technology stack ）
 - golang [https://golang.google.cn](https://golang.google.cn)
 - vue [https://cn.vuejs.org](https://cn.vuejs.org)
 - xorm [https://xorm.io](https://xorm.io)
