@@ -23,8 +23,8 @@
 - [x] 系统设置
 - [x] 管理主页
 - [x] QQ扫码登录
+- [ ] 图片存储使用七牛云
 ## 说明
-
 - 替换markdown 编辑器为富文本编辑器即可作为简单`CMS`,更多功能请二次开发
 [https://github.com/zxysilent/view-design-admin](https://github.com/zxysilent/view-design-admin)
 
