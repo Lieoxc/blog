@@ -70,8 +70,8 @@ func UploadFile(ctx *gin.Context) {
 
 	}
 	dir := time.Now().Format("200601/02")
-	os.MkdirAll("./static/upload/"+dir[:6], 0755)
-	name := "static/upload/" + dir + utils.RandStr(10) + path.Ext(file.Filename)
+	os.MkdirAll("./webui/static/upload/"+dir[:6], 0755)
+	name := "webui/static/upload/" + dir + utils.RandStr(10) + path.Ext(file.Filename)
 	dst, err := os.Create(name)
 	if err != nil {
 		ctx.JSON(utils.Fail("文件打创建文件失败", err.Error()))
@@ -118,12 +118,12 @@ func UploadImage(ctx *gin.Context) {
 	}{}
 	ctx.Bind(attr)
 	dir := time.Now().Format("200601/02")
-	os.MkdirAll("./static/upload/"+dir[:6], 0755)
+	os.MkdirAll("./webui/static/upload/"+dir[:6], 0755)
 	ext := path.Ext(file.Filename)
 	if conf.App.ImageCut && attr.Cut {
 		ext = ".jpg"
 	}
-	name := "static/upload/" + dir + utils.RandStr(10) + ext
+	name := "webui/static/upload/" + dir + utils.RandStr(10) + ext
 	dst, err := os.Create(name)
 	if err != nil {
 		ctx.JSON(utils.ErrIpt("目标文件创建失败,请重试", err.Error()))
