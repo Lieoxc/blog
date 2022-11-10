@@ -41,7 +41,14 @@ type appcfg struct {
 	OrmCacheUse  bool   `toml:"orm_cache_use"`  //是否使用缓存
 	OrmCacheSize int    `toml:"orm_cache_size"` //缓存数量
 	OrmHijackLog bool   `toml:"orm_hijack_log"` //劫持日志
-	Author       struct {
+
+	Zone       int    `toml:"Zone"`       //七牛云区域
+	AccessKey  string `toml:"AccessKey"`  //AccessKey
+	SecretKey  string `toml:"SecretKey"`  //SecretKey
+	Bucket     string `toml:"Bucket"`     //Bucket
+	QiniuSever string `toml:"QiniuSever"` //QiniuSever
+
+	Author struct {
 		Name    string `toml:"name"`
 		Website string `toml:"website"`
 	} `toml:"author"`
@@ -86,6 +93,7 @@ func Init() {
 	if err != nil {
 		logs.Fatal("config init error : ", err.Error())
 	}
+
 	logs.Debug("conf init")
 }
 
@@ -95,5 +103,6 @@ func initCfg() (*appcfg, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return app, nil
 }

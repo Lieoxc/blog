@@ -56,6 +56,7 @@ func RunApp() {
 
 	engine.Static("/dist", "./webui/dist")           // 静态目录 - 后端专用
 	engine.Static("/static", "./webui/static")       // 静态目录
+	engine.Static("/webui", "./webui")               // 静态目录
 	engine.StaticFile("/favicon.ico", "favicon.ico") // ico
 	// 后台登录
 	engine.GET("/login.html", func(c *gin.Context) {
@@ -79,8 +80,9 @@ func RunApp() {
 	api := engine.Group("/api") // api/
 	apiRouter(api)              // 注册分组路由
 
-	adm := engine.Group("/adm", middleware.MidAuth()) // adm/ 需要登陆才能访问
-	admRouter(adm)                                    // 注册分组路由
+	//adm := engine.Group("/adm", middleware.MidAuth()) // adm/ 需要登陆才能访问
+	adm := engine.Group("/adm") // adm/ 需要登陆才能访问
+	admRouter(adm)              // 注册分组路由
 	err := engine.Run(conf.App.Addr)
 	if err != nil {
 		logs.Fatal("run error :", err.Error())
