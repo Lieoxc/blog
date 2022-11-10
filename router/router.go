@@ -80,9 +80,8 @@ func RunApp() {
 	api := engine.Group("/api") // api/
 	apiRouter(api)              // 注册分组路由
 
-	//adm := engine.Group("/adm", middleware.MidAuth()) // adm/ 需要登陆才能访问
-	adm := engine.Group("/adm") // adm/ 需要登陆才能访问
-	admRouter(adm)              // 注册分组路由
+	adm := engine.Group("/adm", middleware.MidAuth()) // adm/ 需要登陆才能访问
+	admRouter(adm)                                    // 注册分组路由
 	err := engine.Run(conf.App.Addr)
 	if err != nil {
 		logs.Fatal("run error :", err.Error())

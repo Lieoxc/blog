@@ -11,7 +11,7 @@ import (
 // midAuth 登录认证中间件
 func MidAuth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		tokenRaw := ctx.GetString(conf.App.TokenKey) // query/form 查找 token
+		tokenRaw := ctx.Request.FormValue(conf.App.TokenKey) // query/form 查找 token
 		if tokenRaw == "" {
 			tokenRaw = ctx.Request.Header.Get("Authorization")
 			if tokenRaw == "" {
