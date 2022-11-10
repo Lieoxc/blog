@@ -15,7 +15,7 @@ func admRouter(adm *gin.RouterGroup) {
 	adm.GET("/status/goinfo", sysctl.StatusGoinfo)   // 环境信息
 	adm.GET("/status/appinfo", sysctl.StatusAppinfo) // 统计信息
 	adm.POST("/upload/file", sysctl.UploadFile)      // 文件上传
-	adm.POST("/upload/image", sysctl.UploadImage)    // 图片上传
+	adm.POST("/upload/image", sysctl.UploadFile)     // 图片上传
 	adm.POST("/global/edit", sysctl.GlobalEdit)      // 配置修改
 	adm.POST("/dict/add", sysctl.DictAdd)            // 添加字典
 	adm.POST("/dict/edit", sysctl.DictEdit)          // 编辑字典

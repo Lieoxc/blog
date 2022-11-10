@@ -5,6 +5,15 @@ mode = "debug"
 addr = ":3000"
 srv = "http://0.0.0.0:3000"
 
+# 七牛云相关
+# 1:华东/华东-浙江;2:华北;3:华南,不填默认华北。境外服务器特殊使用环境自行配置
+Zone = 3 
+AccessKey = "RBjkLALrZfnHSkkVkc1dvZANeALAVUV8LZIqc_UQ"
+SecretKey = "CBENBR-JMVD1yeb9yi7hIhaovPs5QvwAcql-8rBD"
+Bucket = "xcli"
+# // 这样web页面才会主动去公网获取
+QiniuSever = "//lxcong.cn/"
+
 # token 相关
 token_key = "token"
 # 过期时间 h
@@ -83,3 +92,4 @@ web_appid = "appid"
 web_appid = "appid"
 # 申请名称appkey,对接名称secret
 web_secret = "appkey"
+
