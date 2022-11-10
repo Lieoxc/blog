@@ -11,7 +11,8 @@ Zone = 3
 AccessKey = "RBjkLALrZfnHSkkVkc1dvZANeALAVUV8LZIqc_UQ"
 SecretKey = "CBENBR-JMVD1yeb9yi7hIhaovPs5QvwAcql-8rBD"
 Bucket = "xcli"
-QiniuSever = "lxcong.cn/"
+# // 这样web页面才会主动去公网获取
+QiniuSever = "//lxcong.cn/"
 
 # token 相关
 token_key = "token"
