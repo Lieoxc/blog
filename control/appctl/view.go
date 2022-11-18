@@ -14,7 +14,7 @@ import (
 // ------------------------------------------------------ 主页面 ------------------------------------------------------
 // ViewIndex 主页面
 func ViewIndex(ctx *gin.Context) {
-	pi, _ := strconv.Atoi(ctx.GetString("page"))
+	pi, _ := strconv.Atoi(ctx.Query("page"))
 	if pi == 0 {
 		pi = 1
 	}
