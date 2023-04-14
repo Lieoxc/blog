@@ -4,7 +4,6 @@ import (
 	"blog/conf"
 	"blog/control/analysis"
 	"blog/control/appctl"
-	"blog/control/sysctl"
 	"blog/middleware"
 
 	"github.com/gin-contrib/multitemplate"
@@ -64,9 +63,7 @@ func RunApp() {
 		// 302 临时重定向
 		c.HTML(200, "dashboard", nil)
 	})
-	// qq登录
-	engine.GET("/login/qq.html", sysctl.ViewLoginQq)
-	engine.GET("/auth/qq.html", sysctl.ViewAuthQq)
+
 	// -- 页面 -- start
 	engine.GET("/", appctl.ViewIndex)              // 首页
 	engine.GET("/archives", appctl.ViewArchives)   // 归档

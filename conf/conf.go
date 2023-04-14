@@ -2,9 +2,11 @@ package conf
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 
-	"github.com/BurntSushi/toml"
 	"github.com/zxysilent/logs"
+	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -13,56 +15,45 @@ const (
 )
 
 type appcfg struct {
-	Title        string `toml:"title"`          //
-	Intro        string `toml:"intro"`          //
-	Mode         string `toml:"mode"`           //
-	Addr         string `toml:"addr"`           //
-	Srv          string `toml:"srv"`            //
-	TokenKey     string `toml:"token_key"`      //token关键词
-	TokenExp     int    `toml:"token_exp"`      //过期时间 h
-	TokenKeep    bool   `toml:"token_keep"`     //保持在线
-	TokenSso     bool   `toml:"token_sso"`      //单点登录
-	TokenSecret  string `toml:"token_secret"`   //加密私钥
-	ImageCut     bool   `toml:"image_cut"`      //图片裁剪
-	ImageWidth   int    `toml:"image_width"`    //图片宽度
-	ImageHeight  int    `toml:"image_height"`   //图片高度
-	PageMin      int    `toml:"page_min"`       //最小分页大小
-	PageMax      int    `toml:"page_max"`       //最大分页大小
-	DbHost       string `toml:"db_host"`        //数据库地址
-	DbPort       int    `toml:"db_port"`        //数据库端口
-	DbUser       string `toml:"db_user"`        //数据库账号
-	DbPasswd     string `toml:"db_passwd"`      //数据库密码
-	DbName       string `toml:"db_name"`        //数据库名称
-	DbParams     string `toml:"db_params"`      //数据库参数
-	OrmIdle      int    `toml:"orm_idle"`       //
-	OrmOpen      int    `toml:"orm_open"`       //
-	OrmShow      bool   `toml:"orm_show"`       //显示sql
-	OrmSync      bool   `toml:"orm_sync"`       //同步表结构
-	OrmCacheUse  bool   `toml:"orm_cache_use"`  //是否使用缓存
-	OrmCacheSize int    `toml:"orm_cache_size"` //缓存数量
-	OrmHijackLog bool   `toml:"orm_hijack_log"` //劫持日志
+	Title        string `yaml:"title"`          //
+	Intro        string `yaml:"intro"`          //
+	Mode         string `yaml:"mode"`           //
+	Addr         string `yaml:"addr"`           //
+	Srv          string `yaml:"srv"`            //
+	TokenKey     string `yaml:"token_key"`      //token关键词
+	TokenExp     int    `yaml:"token_exp"`      //过期时间 h
+	TokenKeep    bool   `yaml:"token_keep"`     //保持在线
+	TokenSso     bool   `yaml:"token_sso"`      //单点登录
+	TokenSecret  string `yaml:"token_secret"`   //加密私钥
+	ImageCut     bool   `yaml:"image_cut"`      //图片裁剪
+	ImageWidth   int    `yaml:"image_width"`    //图片宽度
+	ImageHeight  int    `yaml:"image_height"`   //图片高度
+	PageMin      int    `yaml:"page_min"`       //最小分页大小
+	PageMax      int    `yaml:"page_max"`       //最大分页大小
+	DbHost       string `yaml:"db_host"`        //数据库地址
+	DbPort       int    `yaml:"db_port"`        //数据库端口
+	DbUser       string `yaml:"db_user"`        //数据库账号
+	DbPasswd     string `yaml:"db_passwd"`      //数据库密码
+	DbName       string `yaml:"db_name"`        //数据库名称
+	DbParams     string `yaml:"db_params"`      //数据库参数
+	OrmIdle      int    `yaml:"orm_idle"`       //
+	OrmOpen      int    `yaml:"orm_open"`       //
+	OrmShow      bool   `yaml:"orm_show"`       //显示sql
+	OrmSync      bool   `yaml:"orm_sync"`       //同步表结构
+	OrmCacheUse  bool   `yaml:"orm_cache_use"`  //是否使用缓存
+	OrmCacheSize int    `yaml:"orm_cache_size"` //缓存数量
+	OrmHijackLog bool   `yaml:"orm_hijack_log"` //劫持日志
 
-	Zone       int    `toml:"Zone"`       //七牛云区域
-	AccessKey  string `toml:"AccessKey"`  //AccessKey
-	SecretKey  string `toml:"SecretKey"`  //SecretKey
-	Bucket     string `toml:"Bucket"`     //Bucket
-	QiniuSever string `toml:"QiniuSever"` //QiniuSever
+	Zone       int    `yaml:"Zone"`       //七牛云区域
+	AccessKey  string `yaml:"AccessKey"`  //AccessKey
+	SecretKey  string `yaml:"SecretKey"`  //SecretKey
+	Bucket     string `yaml:"Bucket"`     //Bucket
+	QiniuSever string `yaml:"QiniuSever"` //QiniuSever
 
 	Author struct {
-		Name    string `toml:"name"`
-		Website string `toml:"website"`
-	} `toml:"author"`
-	Wechat struct {
-		GzhAppid  string `toml:"gzh_appid"`  //公众号
-		GzhSecret string `toml:"gzh_secret"` //公众号
-		MpgAppid  string `toml:"mpg_appid"`  //小程序
-		MpgSecret string `toml:"mpg_secret"` //小程序
-		WebAppid  string `toml:"web_appid"`  //web
-	} `toml:"wechat"`
-	Qq struct {
-		WebAppid  string `toml:"web_appid"`  //web
-		WebSecret string `toml:"web_secret"` //appkey-申请名称appkey,对接名称secret
-	} `toml:"qq"`
+		Name    string `yaml:"name"`
+		Website string `yaml:"website"`
+	} `yaml:"author"`
 }
 
 func (app *appcfg) IsProd() bool {
@@ -84,7 +75,7 @@ func (app *appcfg) Dsn() string {
 
 var (
 	App       *appcfg              //运行配置实体
-	defConfig = "./conf/conf.toml" //配置文件路径，方便测试
+	defConfig = "./conf/conf.yaml" //配置文件路径，方便测试
 )
 
 func Init() {
@@ -99,10 +90,18 @@ func Init() {
 
 func initCfg() (*appcfg, error) {
 	app := &appcfg{}
-	_, err := toml.DecodeFile(defConfig, &app)
+
+	// 读取 YAML 格式的配置文件内容
+	yamlContent, err := ioutil.ReadFile(defConfig)
 	if err != nil {
-		return nil, err
+		log.Fatalf("failed to read config.yml: %v", err)
 	}
 
+	// 解析 YAML 格式的配置文件内容到 app 结构体中
+
+	err = yaml.Unmarshal(yamlContent, &app)
+	if err != nil {
+		log.Fatalf("failed to unmarshal config: %v", err)
+	}
 	return app, nil
 }
