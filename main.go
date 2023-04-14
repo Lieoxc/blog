@@ -16,7 +16,7 @@ import (
 // @Description token传递方式包括[get/post]token、[header]Authorization
 // @Description /api/* 公共访问
 // @Description /adm/* 必须传入 token
-// @Host 127.0.0.1:8085
+// @Host 127.0.0.1:3000
 // @BasePath /
 func main() {
 	logs.Info("app initializing")

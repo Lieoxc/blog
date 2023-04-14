@@ -25,5 +25,6 @@ func apiRouter(api *gin.RouterGroup) {
 	api.GET("/post/page", appctl.PostPage)      // 文章分页
 	api.GET("/page/get", appctl.PageGet)        // 单个页面
 	api.GET("/page/page", appctl.PagePage)      // 页面分页
+	api.GET("/cron/page", appctl.CronTaskPage)  // 标签分页
 
 }

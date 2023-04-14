@@ -64,6 +64,7 @@ func Init() {
 			new(User),
 			new(Dict),
 			new(Global),
+			new(CronTask),
 		)
 		if err != nil {
 			db.Close()
@@ -110,6 +111,9 @@ func (p *Page) Stat() error {
 
 type IptId struct {
 	Id int `query:"id" json:"id"` //仅包含Id的请求
+}
+type IptIds struct {
+	IDs []int `query:"ids" json:"id"` //仅包含Id的请求,数组形式
 }
 
 // Naver 上下页

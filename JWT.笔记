@@ -1,0 +1,49 @@
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjM5NDEwMTY1MUBxcS5jb20iLCJleHAiOjE2Nzk4MDIzNjMsImlzcyI6ImRpYXJ5IiwibmJmIjoxNjc5MTk3NDYzfQ.LaVNrnj8RA0Buw7UDYGGzyKTyXhmm0ORNOv-MdPI2nk
+           {"username":"394101651@qq.com","exp":1679802363,"iss":"diary","nbf":1679197463}
+第一部分： JWT头部分是一个描述JWT元数据的JSON对象
+{"alg":"HS256","typ":"JWT"}
+
+
+第二部分： 七个默认字段+自定义私有字段
+{"username":"394101651@qq.com","exp":1679802363,"iss":"diary","nbf":1679197463}
+
+第三部分： 签名=HMACSHA256(base64UrlEncode(header)+"."+base64UrlEncode(payload),secret)   --这里的secret就是各个分布式系统和统一认证中心协商的
+
+LaVNrnj8RA0Buw7UDYGGzyKTyXhmm0ORNOv-MdPI2nk   HS256基本无法解密，只能靠暴力
+
+
+2. token续约方案
+方案一：(创建一个键值对 token：token1 有效期2*token  校验里面的token1有效期)
+1. 登录成功后将用户生成的 jwt token 作为key、value存储到cache缓存里面 (这时候key、value值一样)，将缓存有效期设置为 token 有效时间的2倍。
+
+2. 当该用户再次请求时，通过后端的一个 jwt Filter 校验前端token是否是有效token，如果前端token无效表明是非法请求，直接抛出异常即可；
+
+	根据规则取出cache token，判断cache token是否存在，此时主要分以下几种情况：
+
+	2.1 cache token 不存在，这种情况表明该用户账户空闲超时，返回用户信息已失效，请重新登录。
+
+	2.2 cache token 存在，则需要使用jwt工具类验证该cache token 是否过期超时，不过期无需处理。
+		过期则表示该用户一直在操作只是token失效了，后端程序会给token对应的key映射的value值重新生成jwt token并覆盖value值，该缓存生命周期重新计算。
+
+作用：解决续期问题，实现一段时间内免登录。
+
+缺点：违背无状态设计
+
+方案二: 
+用户登录时，后端返回两个Token：access_token和refresh_token
+
+access_token用于访问API接口，
+refresh_token用于刷新token。
+
+access_token一般设置一个较短的时间，refresh_token可以设置长时间。当access_token过期，前端再使用refresh_token调用相关接口，获取新的access_token和refresh_token，
+使用新的access_token再次请求。但旧的refresh_token依然有用，形成太空垃圾，且流程太过复杂
+
+
+
+太空垃圾：指刷新或重新登录生成新的Token后，旧的Token被废弃，但无法清理，依然有效，称之为太空垃圾。
+
+JWT无状态设计：指服务端没有保存请求的客户端信息，JWT自带客户端的各种信息来识别，每次请求相对独立。  
+
+用户无感知刷新：指用户并不知道Token过期了，不需要用户进行任何操作，就实现Token的续期。
+
+前端无感知刷新：指前端不需要对Token过期和刷新做任何处理，就实现Token的续期。

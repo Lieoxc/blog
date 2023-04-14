@@ -6,7 +6,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "127.0.0.1:8085",
+    "host": "127.0.0.1:3000",
     "basePath": "/",
     "paths": {
         "/adm/auth/edit": {
@@ -252,6 +252,146 @@
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/model.Cate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回数据",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/model.Reply"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/adm/cron/add": {
+            "post": {
+                "tags": [
+                    "CronTask-定时任务"
+                ],
+                "summary": "添加定时任务",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "请求数据",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CronTask"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回数据",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/model.Reply"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/adm/cron/drop": {
+            "post": {
+                "tags": [
+                    "CronTask-定时任务"
+                ],
+                "summary": "通过id删除定时任务，支持多选",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回数据",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/model.Reply"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/adm/cron/edit": {
+            "post": {
+                "tags": [
+                    "CronTask-定时任务"
+                ],
+                "summary": "修改定时任务参数",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "请求数据",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Tag"
                         }
                     }
                 ],
@@ -941,34 +1081,6 @@
                 }
             }
         },
-        "/adm/upload/file": {
-            "post": {
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "tags": [
-                    "ctrl-系统相关"
-                ],
-                "summary": "上传文件",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "file",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            }
-        },
         "/adm/upload/image": {
             "post": {
                 "consumes": [
@@ -995,6 +1107,52 @@
                     }
                 ],
                 "responses": {}
+            }
+        },
+        "/analysis/log": {
+            "post": {
+                "tags": [
+                    "Analysis-解析记录"
+                ],
+                "summary": "新增解析记录",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "请求数据",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.AnalysisLog"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回数据",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/model.Reply"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
             }
         },
         "/api/auth/login": {
@@ -1193,6 +1351,55 @@
                                             "type": "array",
                                             "items": {
                                                 "$ref": "#/definitions/model.Cate"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/cron/page": {
+            "get": {
+                "tags": [
+                    "CronTask-定时任务"
+                ],
+                "summary": "获取定时任务分页",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "分页数",
+                        "name": "pi",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 5,
+                        "description": "每页条数",
+                        "name": "ps",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回数据",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/model.Reply"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/model.Tag"
                                             }
                                         }
                                     }
@@ -1575,6 +1782,27 @@
         }
     },
     "definitions": {
+        "model.AnalysisLog": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "主键",
+                    "type": "integer"
+                },
+                "msg": {
+                    "description": "解析链接",
+                    "type": "string"
+                },
+                "result": {
+                    "description": "解析结果",
+                    "type": "boolean"
+                },
+                "time": {
+                    "description": "创建时间",
+                    "type": "string"
+                }
+            }
+        },
         "model.Cate": {
             "type": "object",
             "properties": {
@@ -1588,6 +1816,31 @@
                 },
                 "name": {
                     "description": "分类名",
+                    "type": "string"
+                }
+            }
+        },
+        "model.CronTask": {
+            "type": "object",
+            "properties": {
+                "callFunc": {
+                    "description": "执行函数",
+                    "type": "string"
+                },
+                "content": {
+                    "description": "cron表达式",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "主键",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "标签名",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "状态",
                     "type": "string"
                 }
             }
@@ -1733,7 +1986,11 @@
                 },
                 "cate": {
                     "description": "分类",
-                    "$ref": "#/definitions/model.Cate"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.Cate"
+                        }
+                    ]
                 },
                 "cate_id": {
                     "description": "分类Id",

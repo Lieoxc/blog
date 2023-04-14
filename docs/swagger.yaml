@@ -1,5 +1,20 @@
 basePath: /
 definitions:
+  model.AnalysisLog:
+    properties:
+      id:
+        description: 主键
+        type: integer
+      msg:
+        description: 解析链接
+        type: string
+      result:
+        description: 解析结果
+        type: boolean
+      time:
+        description: 创建时间
+        type: string
+    type: object
   model.Cate:
     properties:
       id:
@@ -10,6 +25,24 @@ definitions:
         type: string
       name:
         description: 分类名
+        type: string
+    type: object
+  model.CronTask:
+    properties:
+      callFunc:
+        description: 执行函数
+        type: string
+      content:
+        description: cron表达式
+        type: string
+      id:
+        description: 主键
+        type: integer
+      name:
+        description: 标签名
+        type: string
+      status:
+        description: 状态
         type: string
     type: object
   model.Dict:
@@ -113,7 +146,8 @@ definitions:
         description: 允许评论
         type: boolean
       cate:
-        $ref: '#/definitions/model.Cate'
+        allOf:
+        - $ref: '#/definitions/model.Cate'
         description: 分类
       cate_id:
         description: 分类Id
@@ -219,7 +253,7 @@ definitions:
         description: 电话号码
         type: string
     type: object
-host: 127.0.0.1:8085
+host: 127.0.0.1:3000
 info:
   contact: {}
   description: |-
@@ -387,6 +421,89 @@ paths:
       summary: 修改分类
       tags:
       - cate-分类
+  /adm/cron/add:
+    post:
+      parameters:
+      - description: token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: 请求数据
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.CronTask'
+      responses:
+        "200":
+          description: 返回数据
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Reply'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 添加定时任务
+      tags:
+      - CronTask-定时任务
+  /adm/cron/drop:
+    post:
+      parameters:
+      - collectionFormat: csv
+        description: id
+        in: query
+        items:
+          type: integer
+        name: id
+        required: true
+        type: array
+      - description: token
+        in: query
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: 返回数据
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Reply'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 通过id删除定时任务，支持多选
+      tags:
+      - CronTask-定时任务
+  /adm/cron/edit:
+    post:
+      parameters:
+      - description: token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: 请求数据
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.Tag'
+      responses:
+        "200":
+          description: 返回数据
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Reply'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 修改定时任务参数
+      tags:
+      - CronTask-定时任务
   /adm/dict/add:
     post:
       parameters:
@@ -776,25 +893,6 @@ paths:
       summary: 修改标签
       tags:
       - tag-标签
-  /adm/upload/file:
-    post:
-      consumes:
-      - multipart/form-data
-      parameters:
-      - description: token
-        in: query
-        name: token
-        required: true
-        type: string
-      - description: file
-        in: formData
-        name: file
-        required: true
-        type: file
-      responses: {}
-      summary: 上传文件
-      tags:
-      - ctrl-系统相关
   /adm/upload/image:
     post:
       consumes:
@@ -814,6 +912,33 @@ paths:
       summary: 上传图片并裁剪
       tags:
       - ctrl-系统相关
+  /analysis/log:
+    post:
+      parameters:
+      - description: token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: 请求数据
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.AnalysisLog'
+      responses:
+        "200":
+          description: 返回数据
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Reply'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 新增解析记录
+      tags:
+      - Analysis-解析记录
   /api/auth/login:
     post:
       consumes:
@@ -935,6 +1060,36 @@ paths:
       summary: 获取分类分页
       tags:
       - cate-分类
+  /api/cron/page:
+    get:
+      parameters:
+      - default: 1
+        description: 分页数
+        in: query
+        name: pi
+        required: true
+        type: integer
+      - default: 5
+        description: 每页条数
+        in: query
+        name: ps
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: 返回数据
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Reply'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.Tag'
+                  type: array
+              type: object
+      summary: 获取定时任务分页
+      tags:
+      - CronTask-定时任务
   /api/dict/get:
     get:
       parameters:

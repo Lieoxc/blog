@@ -26,10 +26,13 @@ func admRouter(adm *gin.RouterGroup) {
 	adm.POST("/tag/add", appctl.TagAdd)              // 添加标签
 	adm.POST("/tag/edit", appctl.TagEdit)            // 编辑标签
 	adm.POST("/tag/drop", appctl.TagDrop)            // 删除标签
-	adm.POST("/post/add", appctl.PostAdd)            // 添加文章
-	adm.POST("/post/edit", appctl.PostEdit)          // 编辑文章
-	adm.POST("/post/drop", appctl.PostDrop)          // 删除文章
-	adm.POST("/page/add", appctl.PageAdd)            // 添加页面
-	adm.POST("/page/edit", appctl.PageEdit)          // 编辑页面
-	adm.POST("/page/drop", appctl.PageDrop)          // 删除页面
+	adm.POST("/cron/add", appctl.CronTaskAdd)
+	adm.POST("/cron/edit", appctl.CronTaskEdit)
+	adm.POST("/cron/drop", appctl.CronTaskDrop)
+	adm.POST("/post/add", appctl.PostAdd)   // 添加文章
+	adm.POST("/post/edit", appctl.PostEdit) // 编辑文章
+	adm.POST("/post/drop", appctl.PostDrop) // 删除文章
+	adm.POST("/page/add", appctl.PageAdd)   // 添加页面
+	adm.POST("/page/edit", appctl.PageEdit) // 编辑页面
+	adm.POST("/page/drop", appctl.PageDrop) // 删除页面
 }
