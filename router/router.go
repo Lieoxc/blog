@@ -2,6 +2,7 @@ package router
 
 import (
 	"blog/conf"
+	"blog/control/analysis"
 	"blog/control/appctl"
 	"blog/control/sysctl"
 	"blog/middleware"
@@ -76,6 +77,9 @@ func RunApp() {
 	engine.GET("/links", appctl.ViewLinks)         // 友链
 	engine.GET("/page/:html", appctl.ViewPage)     // 具体某个页面
 	engine.GET("/post/:html", appctl.ViewPost)     // 具体某个文章
+
+	engine.POST("/analysis/log", analysis.AnalysisAdd) // 插入小红书解析记录
+
 	//-- 页面 -- end
 	api := engine.Group("/api") // api/
 	apiRouter(api)              // 注册分组路由
@@ -83,6 +87,7 @@ func RunApp() {
 	//adm := engine.Group("/adm", middleware.MidAuth()) // adm/ 需要登陆才能访问
 	adm := engine.Group("/adm") // adm/ 需要登陆才能访问
 	admRouter(adm)              // 注册分组路由
+
 	err := engine.Run(conf.App.Addr)
 	if err != nil {
 		logs.Fatal("run error :", err.Error())

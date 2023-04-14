@@ -37,7 +37,7 @@ page_max = 30
 # 数据库
 # https://github.com/go-sql-driver/mysql
 # 数据库地址
-db_host = "192.168.31.37"
+db_host = "192.168.31.61"
 # 数据库端口
 db_port = 3306
 # 数据库账号
