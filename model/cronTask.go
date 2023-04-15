@@ -7,7 +7,7 @@ type CronTask struct {
 	Content  string `xorm:"VARCHAR(255) comment('cron表达式')" json:"content"`           //cron表达式
 	CallFunc string `xorm:"VARCHAR(255) comment('执行函数')" json:"callFunc"`             //执行函数
 	Status   int    `xorm:"INT(11) DEFAULT 2 comment('状态, 1:停用 2:启用')" json:"status"` //状态  1停用， 2启用
-	EntryId  int    `xorm:"INT(11) DEFAULT 0 comment('错误次数')" json:"entryid"`         //cron任务的运行ID
+	EntryId  int    `xorm:"INT(11) DEFAULT 0 comment('错误次数')"`                        //cron任务的运行ID 不需要上传给前端
 }
 
 // CronTask 标签分页总数

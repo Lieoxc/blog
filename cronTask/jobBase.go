@@ -25,6 +25,7 @@ var (
 func initJob() {
 	jobList = map[string]JobsExec{
 		"OpenAICheck": worker.OpenAICheck{},
+		"ExamplesOne": worker.ExamplesOne{},
 		// ...
 	}
 }
@@ -65,6 +66,14 @@ func setup() {
 	// 关闭任务
 	defer crontab.Stop()
 	select {}
+}
+
+func GetAllCronFunsList() []string {
+	funcList := make([]string, 0, len(jobList))
+	for FuncKey := range jobList {
+		funcList = append(funcList, FuncKey)
+	}
+	return funcList
 }
 
 // 初始化

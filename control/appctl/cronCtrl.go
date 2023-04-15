@@ -44,6 +44,16 @@ func CronTaskPage(ctx *gin.Context) {
 	ctx.JSON(utils.Page("succ", mods, int(count)))
 }
 
+// CronTaskFunc doc
+// @Tags CronTask-定时任务
+// @Summary 获取所支持功能列表
+// @Success 200 {object} model.Reply{data=[]string} "返回数据"
+// @Router /api/cron/func [get]
+func CronTaskFunc(ctx *gin.Context) {
+	funcList := cronTask.GetAllCronFunsList()
+	ctx.JSON(utils.Succ("succ", funcList))
+}
+
 // CronTaskAdd doc
 // @Tags CronTask-定时任务
 // @Summary 添加定时任务
