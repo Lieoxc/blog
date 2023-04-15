@@ -11,14 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/zxysilent/logs"
 )
-
-func init() {
-	logs.SetLevel(logs.DEBUG)
-	logs.SetCallInfo(true)
-	logs.SetConsole(true)
-}
 
 // RegDocs 注册文档
 // dev[开发] 模式需要文档

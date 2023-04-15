@@ -3,7 +3,7 @@ package model
 import (
 	"errors"
 
-	"github.com/zxysilent/logs"
+	"github.com/Lieoxc/zlog"
 )
 
 // Goinfo go information
@@ -54,7 +54,7 @@ func initGlobal() error {
 		return errors.New("no")
 	}
 	globalCache = mod
-	logs.Debug("global cache")
+	zlog.GetLogger().Debug("global cache")
 	return nil
 }
 

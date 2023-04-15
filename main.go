@@ -2,13 +2,14 @@ package main
 
 import (
 	"blog/conf"
+	"blog/cronTask"
 	"blog/model"
 	"blog/router"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/zxysilent/logs"
+	"github.com/Lieoxc/zlog"
 )
 
 // @Title Blog’s 接口文档
@@ -19,15 +20,15 @@ import (
 // @Host 127.0.0.1:3000
 // @BasePath /
 func main() {
-	logs.Info("app initializing")
+	zlog.NewLogger(zlog.SetDevelopment(true))
 	conf.Init()
 	model.Init()
+	cronTask.Init()
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
-	logs.Info("app running")
+	zlog.GetLogger().Info("app running")
 	go router.RunApp()
 	<-quit
 	model.Close()
-	logs.Info("app quitted")
-	logs.Flush()
+	zlog.GetLogger().Info("app quitted")
 }

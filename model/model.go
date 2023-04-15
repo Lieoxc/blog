@@ -3,16 +3,15 @@ package model
 import (
 	"blog/conf"
 	"errors"
-	"log"
 	"strings"
 
+	"go.uber.org/zap"
 	"xorm.io/xorm"
 	"xorm.io/xorm/caches"
 
 	// 数据库驱动
+	"github.com/Lieoxc/zlog"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/zxysilent/logs"
-	xlog "xorm.io/xorm/log"
 )
 
 // db 数据库操作句柄
@@ -23,25 +22,25 @@ func Init() {
 	var err error
 	db, err = xorm.NewEngine("mysql", conf.App.Dsn())
 	if err != nil {
-		logs.Fatal("数据库 dsn:", err.Error())
+		zlog.GetLogger().Fatal("数据库 dsn:", zap.Error(err))
 	}
 	// 劫持xorm日志
-	if conf.App.OrmHijackLog {
-		sl := &xlog.SimpleLogger{
-			DEBUG: log.New(logs.Writer(), "", log.Ldate|log.Ltime),
-			ERR:   log.New(logs.Writer(), "", log.Ldate|log.Ltime),
-			INFO:  log.New(logs.Writer(), "", log.Ldate|log.Ltime),
-			WARN:  log.New(logs.Writer(), "", log.Ldate|log.Ltime),
-		}
-		if conf.App.IsDev() {
-			sl.SetLevel(xlog.LOG_DEBUG)
-		} else {
-			sl.SetLevel(xlog.LOG_WARNING)
-		}
-		db.SetLogger(sl)
-	}
+	// if conf.App.OrmHijackLog {
+	// 	sl := &xlog.SimpleLogger{
+	// 		DEBUG: log.New(logs.Writer(), "", log.Ldate|log.Ltime),
+	// 		ERR:   log.New(logs.Writer(), "", log.Ldate|log.Ltime),
+	// 		INFO:  log.New(logs.Writer(), "", log.Ldate|log.Ltime),
+	// 		WARN:  log.New(logs.Writer(), "", log.Ldate|log.Ltime),
+	// 	}
+	// 	if conf.App.IsDev() {
+	// 		sl.SetLevel(xlog.LOG_DEBUG)
+	// 	} else {
+	// 		sl.SetLevel(xlog.LOG_WARNING)
+	// 	}
+	// 	db.SetLogger(sl)
+	// }
 	if err = db.Ping(); err != nil {
-		logs.Fatal("数据库 ping:", err.Error())
+		zlog.GetLogger().Fatal("数据库 ping:", zap.Error(err))
 	}
 	db.SetMaxIdleConns(conf.App.OrmIdle)
 	db.SetMaxOpenConns(conf.App.OrmOpen)
@@ -68,12 +67,12 @@ func Init() {
 		)
 		if err != nil {
 			db.Close()
-			logs.Fatal("数据库 sync:", err.Error())
+			zlog.GetLogger().Fatal("数据库 sync:", zap.Error(err))
 		}
 	}
 	//缓存
 	initGlobal()
-	logs.Info("model init")
+	zlog.GetLogger().Info("model init")
 }
 
 func Close() {

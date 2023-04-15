@@ -6,9 +6,10 @@ import (
 	"blog/control/appctl"
 	"blog/middleware"
 
+	"github.com/Lieoxc/zlog"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
-	"github.com/zxysilent/logs"
+	"go.uber.org/zap"
 )
 
 func createMyRender() multitemplate.Renderer {
@@ -87,6 +88,6 @@ func RunApp() {
 
 	err := engine.Run(conf.App.Addr)
 	if err != nil {
-		logs.Fatal("run error :", err.Error())
+		zlog.GetLogger().Fatal("run error :", zap.Error(err))
 	}
 }

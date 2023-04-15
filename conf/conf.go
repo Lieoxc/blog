@@ -3,9 +3,9 @@ package conf
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 
-	"github.com/zxysilent/logs"
+	"github.com/Lieoxc/zlog"
+	"go.uber.org/zap"
 	"gopkg.in/yaml.v2"
 )
 
@@ -82,10 +82,10 @@ func Init() {
 	var err error
 	App, err = initCfg()
 	if err != nil {
-		logs.Fatal("config init error : ", err.Error())
+		zlog.GetLogger().Fatal("config init error : ", zap.Error(err))
 	}
 
-	logs.Debug("conf init")
+	zlog.GetLogger().Debug("conf init")
 }
 
 func initCfg() (*appcfg, error) {
@@ -94,14 +94,14 @@ func initCfg() (*appcfg, error) {
 	// 读取 YAML 格式的配置文件内容
 	yamlContent, err := ioutil.ReadFile(defConfig)
 	if err != nil {
-		log.Fatalf("failed to read config.yml: %v", err)
+		zlog.GetLogger().Fatal("failed to read config.yml:", zap.Error(err))
 	}
 
 	// 解析 YAML 格式的配置文件内容到 app 结构体中
 
 	err = yaml.Unmarshal(yamlContent, &app)
 	if err != nil {
-		log.Fatalf("failed to unmarshal config: %v", err)
+		zlog.GetLogger().Fatal("failed to unmarshal config:", zap.Error(err))
 	}
 	return app, nil
 }

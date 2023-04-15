@@ -1,12 +1,14 @@
 package appctl
 
 import (
+	"blog/cronTask"
 	"blog/model"
 	"strconv"
 
+	"github.com/Lieoxc/zlog"
 	"github.com/gin-gonic/gin"
-	"github.com/zxysilent/logs"
 	"github.com/zxysilent/utils"
+	"go.uber.org/zap"
 )
 
 // CronTaskPage doc
@@ -61,6 +63,14 @@ func CronTaskAdd(ctx *gin.Context) {
 		ctx.JSON(utils.Fail("添加失败", err.Error()))
 		return
 	}
+
+	if ipt.Status == cronTask.TaskStart { //开始启动任务
+		err = cronTask.StartJob(ipt)
+		if err != nil {
+			ctx.JSON(utils.Fail("启动定时任务失败", err.Error()))
+			return
+		}
+	}
 	ctx.JSON(utils.Succ("succ"))
 }
 
@@ -78,10 +88,25 @@ func CronTaskEdit(ctx *gin.Context) {
 		ctx.JSON(utils.ErrIpt("输入有误", err.Error()))
 		return
 	}
+	//不过做什么修改，都先中止之前的任务
+	err = cronTask.RmoveJob(ipt.Id)
+	if err != nil {
+		ctx.JSON(utils.Fail("停止定时任务失败", err.Error()))
+		return
+	}
+	// 更新数据库
 	err = model.CronTaskEdit(ipt)
 	if err != nil {
 		ctx.JSON(utils.Fail("修改失败", err.Error()))
 		return
+	}
+	// 创建新的定时任务
+	if ipt.Status == cronTask.TaskStart { //开始启动任务
+		err = cronTask.StartJob(ipt)
+		if err != nil {
+			ctx.JSON(utils.Fail("启动定时任务失败", err.Error()))
+			return
+		}
 	}
 	ctx.JSON(utils.Succ("succ"))
 }
@@ -100,7 +125,16 @@ func CronTaskDrop(ctx *gin.Context) {
 		ctx.JSON(utils.ErrIpt("输入有误", err.Error()))
 		return
 	}
-	logs.Debug("run id ", ipt.IDs)
+	zlog.GetLogger().Debug("delete id ", zap.Ints("id", ipt.IDs))
+	//先终止定时任务
+	for _, id := range ipt.IDs {
+		err = cronTask.RmoveJob(id)
+		if err != nil {
+			ctx.JSON(utils.Fail("停止定时任务失败", err.Error()))
+			return
+		}
+	}
+	//然后更新数据库
 	err = model.CronTaskDrop(ipt.IDs)
 	if err != nil {
 		ctx.JSON(utils.ErrOpt("删除失败", err.Error()))

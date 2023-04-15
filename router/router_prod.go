@@ -5,15 +5,10 @@ package router
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/zxysilent/logs"
 )
 
 const AppJsUrl = "/static/js/app.min.js"
 const AppCssUrl = "/static/css/app.min.css"
-
-func init() {
-	logs.SetLevel(logs.WARN)
-}
 
 // RegDocs 注册文档
 // prod[正式] 模式不需要文档

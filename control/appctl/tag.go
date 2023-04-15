@@ -4,9 +4,10 @@ import (
 	"blog/model"
 	"strconv"
 
+	"github.com/Lieoxc/zlog"
 	"github.com/gin-gonic/gin"
-	"github.com/zxysilent/logs"
 	"github.com/zxysilent/utils"
+	"go.uber.org/zap"
 )
 
 // TagGet doc
@@ -136,7 +137,7 @@ func TagDrop(ctx *gin.Context) {
 		ctx.JSON(utils.ErrIpt("输入有误", err.Error()))
 		return
 	}
-	logs.Debug("run id ", ipt.Id)
+	zlog.GetLogger().Debug("run id ", zap.Int("id", ipt.Id))
 	err = model.TagDrop(ipt.Id)
 	if err != nil {
 		ctx.JSON(utils.ErrOpt("删除失败", err.Error()))
