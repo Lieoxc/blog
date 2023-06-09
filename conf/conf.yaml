@@ -70,6 +70,6 @@ author:
   name: Lieoxc
   website: https://github.com/Lieoxc
 
-
-
+#全球要闻图片路径
+daily_news_path: "./"
 

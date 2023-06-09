@@ -26,6 +26,7 @@ func initJob() {
 	jobList = map[string]JobsExec{
 		"OpenAICheck": worker.OpenAICheck{},
 		"ExamplesOne": worker.ExamplesOne{},
+		"DailyNews":   worker.DailyNews{},
 		// ...
 	}
 }

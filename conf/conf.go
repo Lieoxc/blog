@@ -54,6 +54,7 @@ type appcfg struct {
 		Name    string `yaml:"name"`
 		Website string `yaml:"website"`
 	} `yaml:"author"`
+	DailyNewsPath string `yaml:"daily_news_path"` //全球要闻图片路径
 }
 
 func (app *appcfg) IsProd() bool {

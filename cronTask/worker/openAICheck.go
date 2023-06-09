@@ -1,14 +1,13 @@
 package worker
 
 import (
-	"blog/conf"
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"time"
+
+	"blog/cronTask/utils"
 
 	"github.com/Lieoxc/zlog"
 	"go.uber.org/zap"
@@ -22,12 +21,6 @@ var (
 	}
 	timeFormat = "2006-01-02 15:04:05"
 )
-
-type Email struct {
-	To      string `json:"to"`      // 邮件发送给谁
-	Subject string `json:"subject"` // 邮件标题
-	Body    string `json:"body"`    // 邮件内容
-}
 
 type BalanceSt struct {
 	TotalUsage float64 `json:"total_usage"`
@@ -50,7 +43,7 @@ func (t OpenAICheck) Exec(arg interface{}) error {
 
 func getAPIUsage(apiKey string) (float64, error) {
 
-	endTime, err := getEndTime()
+	endTime, err := utils.GetEndTime()
 	if err != nil {
 		zlog.GetLogger().Error("getEndTime err:", zap.Any("err:", err))
 		return 0, err
@@ -103,51 +96,16 @@ func getAPIUsage(apiKey string) (float64, error) {
 }
 
 func sendEmail(value float64, key, addr string) error {
-	email := Email{}
+	email := utils.Email{}
 	email.To = addr
 	email.Subject = "OpenAI API-KEY使用报告"
 	body := fmt.Sprintf("<html><body><h4>使用报告</h1><p>API-KEY:%s.<br>总用量：%.2f <br>余额：%.2f </p></body></html>", key, value/100, 5.00-value/100)
 
 	email.Body = body
-	err := callEmailSend(email)
+	err := utils.CallEmailSend(email)
 	if err != nil {
 		zlog.GetLogger().Error("callEmailSend err:", zap.Any("err:", err))
 		return err
 	}
 	return nil
-}
-
-func callEmailSend(email Email) error {
-
-	url := fmt.Sprintf("http://%s/email/sendEmail", conf.App.Addr)
-	dataStr, _ := json.Marshal(email)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(dataStr))
-	if err != nil {
-		zlog.GetLogger().Error("call  EmailSend err:", zap.Any("err:", err))
-		return err
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		zlog.GetLogger().Error("do  EmailSend err:", zap.Any("err:", err))
-		return err
-	}
-	defer resp.Body.Close()
-	return nil
-}
-
-func getEndTime() (string, error) {
-	log := zlog.GetLogger()
-	now := time.Now()                              // 获取当前时间
-	loc, err := time.LoadLocation("Asia/Shanghai") // 加载本地时区信息
-	if err != nil {
-		log.Error("加载时区信息出错：", zap.Any("err:", err))
-		return "", err
-	}
-	localTime := now.In(loc) // 将时间转换为本地时区的时间
-
-	dateStr := localTime.Format("2006-01-02") // 格式化时间为"YYYY-MM-DD"字符串
-	return dateStr, nil
 }
